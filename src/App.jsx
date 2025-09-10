@@ -1,35 +1,76 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { useRef, useState } from "react";
 
-function App() {
-  const [count, setCount] = useState(0)
+export default function App() {
+  // --- language toggle (EN/JP) ---
+  const [lang, setLang] = useState("en");
+  const t = lang === "en"
+    ? {
+        tagline: "Data science • software • cute design",
+        statement:
+          "I build playful, fast products that help people plan, learn, and create.",
+        cats: ["Finance", "Health", "Games", "Robotics/Eng", "Interests"],
+      }
+    : {
+        tagline: "データサイエンス・ソフトウェア・かわいいデザイン",
+        statement:
+          "人々の計画・学習・創作を支える、楽しくて軽快なプロダクトを作っています。",
+        cats: ["ファイナンス", "ヘルス", "ゲーム", "ロボット／工学", "興味"],
+      };
+
+  // --- smooth scroll target (white section) ---
+  const whiteRef = useRef(null);
+  const dropDown = () =>
+    whiteRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
 
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
+    <main>
+      {/* FIXED NAV (name + language switch) */}
+      <header className="nav">
+        <div className="brand">alex—portfolio</div>
+        <button className="lang" onClick={() => setLang(lang === "en" ? "ja" : "en")}>
+          {lang.toUpperCase()}
         </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
-}
+      </header>
 
-export default App
+      {/* CREAM HERO */}
+      <section className="section cream">
+        <div className="wrap hero-grid">
+          <div>
+            <h1 className="signature">Alexandra Maxon</h1>
+            <p className="tagline">{t.tagline}</p>
+
+            {/* black arrow that scrolls down */}
+            <button className="arrow-wrap" onClick={dropDown} aria-label="Scroll down">
+              <span className="arrow" />
+              <span className="mono">scroll</span>
+            </button>
+          </div>
+
+          {/* Swap these with your real images in /public */}
+          <img className="hero-img" src="/hero.jpg" alt="portrait or representative" />
+        </div>
+      </section>
+
+      {/* WHITE SECTION (professional statement + category links) */}
+      <section ref={whiteRef} className="section white">
+        <div className="wrap two-col">
+          <img className="headshot" src="/headshot.jpg" alt="professional headshot" />
+          <div>
+            <h2>Professional Statement</h2>
+            <p>{t.statement}</p>
+
+            <nav className="quick-links">
+              <a href="/finance">→ {t.cats[0]}</a>
+              <a href="/health">→ {t.cats[1]}</a>
+              <a href="/games">→ {t.cats[2]}</a>
+              <a href="/robotics">→ {t.cats[3]}</a>
+              <a href="/interests">→ {t.cats[4]}</a>
+            </nav>
+          </div>
+        </div>
+      </section>
+
+      <footer className="footer">© {new Date().getFullYear()} Alexandra Maxon</footer>
+    </main>
+  );
+}
